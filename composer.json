@@ -1,0 +1,13 @@
+{
+  "name": "foodos/platform",
+  "description": "FoodOS Enterprise marketplace platform skeleton",
+  "type": "project",
+  "require": {
+    "php": "^8.2"
+  },
+  "autoload": {
+    "psr-4": {
+      "FoodOS\\": "src/"
+    }
+  }
+}
