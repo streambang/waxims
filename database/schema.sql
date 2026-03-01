@@ -22,6 +22,7 @@ CREATE TABLE users (
   reputation_score DECIMAL(5,2) NOT NULL DEFAULT 0,
   created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
   updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  UNIQUE KEY uq_users_tenant_id (tenant_id, id),
   UNIQUE KEY uq_users_tenant_email (tenant_id, email),
   KEY idx_users_tenant_role (tenant_id, role),
   CONSTRAINT fk_users_tenant FOREIGN KEY (tenant_id) REFERENCES tenants(id)
@@ -38,6 +39,7 @@ CREATE TABLE restaurants (
   is_active TINYINT(1) NOT NULL DEFAULT 1,
   created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
   updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  UNIQUE KEY uq_restaurants_tenant_id (tenant_id, id),
   UNIQUE KEY uq_restaurants_tenant_slug (tenant_id, slug),
   KEY idx_restaurants_tenant_active (tenant_id, is_active),
   CONSTRAINT fk_restaurants_tenant FOREIGN KEY (tenant_id) REFERENCES tenants(id),
@@ -106,8 +108,8 @@ CREATE TABLE orders (
   KEY idx_orders_tenant_user (tenant_id, user_id, placed_at),
   KEY idx_orders_tenant_rest_status (tenant_id, restaurant_id, status),
   CONSTRAINT fk_orders_tenant FOREIGN KEY (tenant_id) REFERENCES tenants(id),
-  CONSTRAINT fk_orders_user FOREIGN KEY (user_id) REFERENCES users(id),
-  CONSTRAINT fk_orders_restaurant FOREIGN KEY (restaurant_id) REFERENCES restaurants(id)
+  CONSTRAINT fk_orders_user FOREIGN KEY (tenant_id, user_id) REFERENCES users(tenant_id, id),
+  CONSTRAINT fk_orders_restaurant FOREIGN KEY (tenant_id, restaurant_id) REFERENCES restaurants(tenant_id, id)
 ) ENGINE=InnoDB;
 
 CREATE TABLE order_items (
